@@ -1,5 +1,2 @@
-![Screenshot](scrots/2017-08-14-141159_513x513_scrot.png)
-![Screenshot](scrots/2017-08-14-141213_513x513_scrot.png)
-![Screenshot](scrots/2017-08-14-141242_513x513_scrot.png)
-![Screenshot](scrots/2017-08-14-141252_513x513_scrot.png)
-![Screenshot](scrots/2017-08-14-141338_513x513_scrot.png)
+Twin lakes
+![Screenshot](2017-08-14-142300_513x513_scrot.png)
