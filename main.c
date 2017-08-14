@@ -68,14 +68,14 @@ int max(const Map map)
 void draw(const Map map, SDL_Renderer* const renderer)
 {
     const int highest = max(map);
-    struct { int water, shore, adj, scale; } h = { 0x00, 0x04, 0x08, 0x15 };
+    struct { int water, shore, adj, scale; } h = { 0x00, 0x04, 0x0F, 0x15 };
     for(int i = 0; i < map.size; i++)
     for(int j = 0; j < map.size; j++)
     {
         const int grey =
             map.grid[i][j] < h.water ? (h.water)
           : map.grid[i][j] < h.shore ? (h.shore + h.adj)
-          : map.grid[i][j] * h.scale / (float) highest + h.adj;
+          : map.grid[i][j] * h.scale / (double) highest + h.adj;
         SDL_SetRenderDrawColor(renderer, grey, grey, grey, grey);
         SDL_RenderDrawPoint(renderer, i, j);
     }
