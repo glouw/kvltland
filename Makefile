@@ -29,10 +29,6 @@ $(PROJ): $(OBJS)
 .PRECIOUS: %.d
 -include $(patsubst %,%.d,$(basename $(SRCS)))
 
-.PHONY: headers
-headers:
-	python headers.py
-
 .PHONY: clean
 clean:
 	rm -f cachegrind.out.*
