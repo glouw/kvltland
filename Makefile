@@ -1,7 +1,7 @@
 CC = clang -std=c99
 PROJ = land
 # Source files
-SRCS+= main.c
+SRCS = main.c
 OBJS = $(SRCS:.c=.o)
 DEPS = $(SRCS:.c=.d)
 # Warnings flags
