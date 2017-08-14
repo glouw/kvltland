@@ -68,24 +68,22 @@ int max(const Map map)
 void draw(const Map map, SDL_Renderer* const renderer)
 {
     const int highest = max(map);
+    const int scale = 0x15;
+    struct { int water, shore; } height = { 0x00, 0x05 };
     for(int i = 0; i < map.size; i++)
     for(int j = 0; j < map.size; j++)
     {
-        const int pixel = map.grid[i][j];
         const int grey =
-            // Water
-            pixel <= 0x0A ? 0x04:
-            // Shore
-            pixel > 0x0A && pixel < 0x0E ? 0x09:
-            // Snowy mountains
-            pixel * 0x1A / (float) highest;
+            map.grid[i][j] < height.water ? height.water
+          : map.grid[i][j] < height.shore ? height.shore
+          : map.grid[i][j] * scale / (float) highest;
         // Color adjustment
-        const int adj = grey + 0x05;
+        const int adj = grey + 0x0A;
         SDL_SetRenderDrawColor(renderer, adj, adj, adj, adj);
         SDL_RenderDrawPoint(renderer, i, j);
     }
     SDL_RenderPresent(renderer);
-    SDL_Delay(8e3);
+    SDL_Delay(1e4);
 }
 
 Map build(const int size)
@@ -110,7 +108,7 @@ void clean(const Map map)
 int main()
 {
     srand(time(0));
-    const int res = pow(2, 10) + 1;
+    const int res = pow(2, 9) + 1;
     SDL_Window* window;
     SDL_Renderer* renderer;
     SDL_CreateWindowAndRenderer(res, res, 0, &window, &renderer);
