@@ -23,7 +23,7 @@ typedef struct
 }
 Mesh;
 
-void bterp(const Map map, const Mesh m)
+static void bterp(const Map map, const Mesh m)
 {
     for(int x = m.a.x; x < m.b.x; x++)
     for(int y = m.a.y; y < m.b.y; y++)
@@ -35,27 +35,27 @@ void bterp(const Map map, const Mesh m)
     ) / ((m.b.x - m.a.x) * (m.b.y - m.a.y));
 }
 
-void noise(const Map map, const int square)
+static void noise(const Map map, const int square)
 {
     if(square == 2)
         return;
     const int m = (square - 1) / 2;
-    // Points of interest
+    /* Points of interest */
     for(int i = m; i < map.size; i += 2 * m)
     for(int j = m; j < map.size; j += 2 * m)
         map.grid[i][j] += rand() % (2 * square + 1) - square;
-    // Interpolation
+    /* Interpolation */
     for(int i = 0; i < map.size - 1; i += m)
     for(int j = 0; j < map.size - 1; j += m)
     {
         const Mesh mesh = { { i, j }, { i + m, j + m } };
         bterp(map, mesh);
     }
-    // Down the rabbit hole we go
+    /* Down the rabbit hole we go */
     noise(map, m + 1);
 }
 
-int max(const Map map)
+static int max(const Map map)
 {
     int max = INT_MIN;
     for(int i = 0; i < map.size; i++)
@@ -65,25 +65,54 @@ int max(const Map map)
     return max;
 }
 
-void draw(const Map map, SDL_Renderer* const renderer)
+static int min(const Map map)
 {
+    int min = INT_MAX;
+    for(int i = 0; i < map.size; i++)
+    for(int j = 0; j < map.size; j++)
+        if(map.grid[i][j] < min)
+            min = map.grid[i][j];
+    return min;
+}
+
+static void add(const Map map, const int val)
+{
+    for(int i = 0; i < map.size; i++)
+    for(int j = 0; j < map.size; j++)
+        map.grid[i][j] += val;
+}
+
+static void normalize(const Map map)
+{
+    const int lowest = min(map);
+    add(map, abs(lowest));
     const int highest = max(map);
-    struct { int water, shore, adj, scale; } h = { 0x00, 0x04, 0x0F, 0x15 };
+    for(int i = 0; i < map.size; i++)
+    for(int j = 0; j < map.size; j++)
+        map.grid[i][j] = 0xFF * map.grid[i][j] / (float) highest;
+}
+
+static void draw(const Map map, SDL_Renderer* const renderer)
+{
+    normalize(map);
     for(int i = 0; i < map.size; i++)
     for(int j = 0; j < map.size; j++)
     {
-        const int grey =
-            map.grid[i][j] < h.water ? (h.water)
-          : map.grid[i][j] < h.shore ? (h.shore + h.adj)
-          : map.grid[i][j] * h.scale / (double) highest + h.adj;
-        SDL_SetRenderDrawColor(renderer, grey, grey, grey, grey);
+        const int a = 0x2A; /* Sea floor */
+        const int b = 0x5F; /* Sea level */
+        const int p = map.grid[i][j];
+        p < a ?
+            SDL_SetRenderDrawColor(renderer, 0, 0, a, 0): /* Sea floor */
+        p < b ?
+            SDL_SetRenderDrawColor(renderer, 0, 0, p, 0): /* Sea */
+            SDL_SetRenderDrawColor(renderer, p, p, p, 0); /* Ice and snow */
         SDL_RenderDrawPoint(renderer, i, j);
     }
     SDL_RenderPresent(renderer);
-    SDL_Delay(1e4);
+    SDL_Delay(5e3);
 }
 
-Map build(const int size)
+static Map build(const int size)
 {
     #define toss(type, size) ((type*) (calloc(size, sizeof(type))))
     Map map;
@@ -95,7 +124,7 @@ Map build(const int size)
     return map;
 }
 
-void clean(const Map map)
+static void clean(const Map map)
 {
     for(int i = 0; i < map.size; i++)
         free(map.grid[i]);
