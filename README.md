@@ -1,4 +1,4 @@
-Random Greenland generator.
+The Random Greenland Generator
 
 Generate your own Land of the Midnight Sun!
 
