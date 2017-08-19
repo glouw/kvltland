@@ -1,4 +1,4 @@
-CC = clang -std=c99
+CC = gcc -std=c99
 PROJ = land
 # Source files
 SRCS = main.c
