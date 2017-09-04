@@ -1,38 +1,41 @@
+# Compiler and standard
 CC = gcc -std=c99
+
+# Project name
 PROJ = land
+
 # Source files
 SRCS = main.c
-OBJS = $(SRCS:.c=.o)
-DEPS = $(SRCS:.c=.d)
+
 # Warnings flags
 CFLAGS = -Wshadow -Wall -Wpedantic -Wextra -Wpadded
+
 # Debugging flags
 CFLAGS+= -g
+
 # Optimization flags
 CFLAGS+= -Ofast -flto
-ARCHITECTURE = -march=native
-# Linking flags
-LDFLAGS = -lSDL2 -lm
-# Dependency flags
-DEPFLAGS = -MT $@ -MMD -MP -MF $*.Td
-# Compile, link, and post process
-COMP = $(CC) $(ARCHITECTURE) $(CFLAGS) $(DEPFLAGS) -c
-LINK = $(CC) $(ARCHITECTURE) $(CFLAGS) $(OBJS) $(LDFLAGS) -o
-POST = mv -f $*.Td $*.d
-$(PROJ): $(OBJS)
-	$(LINK) $(PROJ)
-%.o : %.c
-%.o : %.c %.d
-	$(COMP) $(OUTPUT_OPTION) $<
-	@$(POST)
-%.d: ;
-.PRECIOUS: %.d
--include $(patsubst %,%.d,$(basename $(SRCS)))
 
-.PHONY: clean
+# Architecture flags
+ARCH = -march=native -m32
+
+# Linker flags
+LDFLAGS = -lSDL2
+
+# Linker
+$(PROJ): $(SRCS:.c=.o)
+	$(CC) $(ARCH) $(CFLAGS) $(SRCS:.c=.o) $(LDFLAGS) -o $(PROJ)
+
+# Compiler template; generates dependency targets
+%.o : %.c
+	$(CC) $(ARCH) $(CFLAGS) -MT $@ -MMD -MP -MF $*.td -c $<
+	@mv -f $*.td $*.d
+
+# All dependency targets
+%.d: ;
+-include *.d
+
 clean:
-	rm -f cachegrind.out.*
-	rm -f vgcore.*
-	rm -f $(DEPS)
 	rm -f $(PROJ)
-	rm -f $(OBJS)
+	rm -f $(SRCS:.c=.o)
+	rm -f $(SRCS:.c=.d)
