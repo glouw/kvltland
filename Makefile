@@ -2,7 +2,7 @@
 CC = gcc -std=c99
 
 # Project name
-PROJ = land
+PROJ = kvltland
 
 # Source files
 SRCS = main.c

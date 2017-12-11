@@ -1,6 +1,4 @@
-The Random Greenland Generator
-
-Generate your own Land of the Midnight Sun!
+Land had never looked so metal.
 
 ![Screenshot](scrots/2017-08-19-074806_513x513_scrot.png)
 
