@@ -1,8 +1,9 @@
 # kvltland
 
-Land has never looked so metal.
+Kvltland aims to be the most metal land generator you have ever seen.
+By metal I mean scandanavian black metal metal.
 
-make; ./kvltland
+    make; ./kvltland
 
 ![Screenshot](scrots/2017-08-19-074806_513x513_scrot.png)
 
