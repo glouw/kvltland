@@ -1,7 +1,8 @@
 # kvltland
 
 Kvltland aims to be the most metal land generator you have ever seen.
-By metal I mean scandanavian black metal metal.
+
+By metal I mean Scandinavian black metal metal.
 
     make; ./kvltland
 
