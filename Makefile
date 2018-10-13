@@ -1,41 +1,18 @@
-# Compiler and standard
-CC = gcc -std=c99
+BIN = kvltland
 
-# Project name
-PROJ = kvltland
+CFLAGS = -std=c99 -Wall -Wextra -pedantic -Ofast -flto -march=native
 
-# Source files
-SRCS = main.c
+LDFLAGS = -lm -lSDL2
 
-# Warnings flags
-CFLAGS = -Wshadow -Wall -Wpedantic -Wextra -Wpadded
+CC = gcc
 
-# Debugging flags
-CFLAGS+= -g
+SRC = main.c
 
-# Optimization flags
-CFLAGS+= -Ofast -flto
+all:
+	$(CC) $(CFLAGS) $(LDFLAGS) $(SRC) -o $(BIN)
 
-# Architecture flags
-ARCH = -march=native -m32
-
-# Linker flags
-LDFLAGS = -lSDL2
-
-# Linker
-$(PROJ): $(SRCS:.c=.o)
-	$(CC) $(ARCH) $(CFLAGS) $(SRCS:.c=.o) $(LDFLAGS) -o $(PROJ)
-
-# Compiler template; generates dependency targets
-%.o : %.c
-	$(CC) $(ARCH) $(CFLAGS) -MT $@ -MMD -MP -MF $*.td -c $<
-	@mv -f $*.td $*.d
-
-# All dependency targets
-%.d: ;
--include *.d
+run:
+	./$(BIN)
 
 clean:
-	rm -f $(PROJ)
-	rm -f $(SRCS:.c=.o)
-	rm -f $(SRCS:.c=.d)
+	rm -f $(BIN)
